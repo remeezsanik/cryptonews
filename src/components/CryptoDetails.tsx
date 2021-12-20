@@ -44,6 +44,7 @@ const CryptoDetails: React.FC = () => {
 
     return (
         <>
+            <h1>Hello World</h1>
             {cryptoDetails ? (
                 <Col className='coin-detail-container'>
                     <Col className='coin-heading-contailer'>
