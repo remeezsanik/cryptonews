@@ -11,7 +11,8 @@ import {
     LockFilled
 } from '@ant-design/icons';
 
-import { useGetCryptoDetailsQuery } from '../services/cryptoApi';
+import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoApi';
+import { LineChart } from '.';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -19,10 +20,13 @@ const { Option } = Select;
 const CryptoDetails: React.FC = () => {
     const { coinId }: any = useParams();
     const [timePeriod, setTimePeriod] = useState('7d');
-    const { data } = useGetCryptoDetailsQuery(coinId);
+    const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
+    const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timePeriod });
     const cryptoDetails = data?.data?.coin;
 
-    console.log("abcdefg", cryptoDetails);
+    console.log("abcdefg", coinHistory);
+
+    if (isFetching) return null
 
     const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
 
@@ -44,7 +48,8 @@ const CryptoDetails: React.FC = () => {
 
     return (
         <>
-            <h1>Hello World</h1>
+            {/* <h1>Hello World</h1> */}
+
             {cryptoDetails ? (
                 <Col className='coin-detail-container'>
                     <Col className='coin-heading-contailer'>
@@ -65,6 +70,9 @@ const CryptoDetails: React.FC = () => {
                             </Option>
                         ))}
                     </Select>
+                    <LineChart coinHistory={coinHistory}
+                        currentPrice={millify(cryptoDetails.price)}
+                        coinName={cryptoDetails.name} />
                     <Col className='stats-container'>
                         <Col className='coin-value-statistics'>
                             <Col className='coin-value-statistics-heading'>
